@@ -29,7 +29,7 @@ def save_data_db(cat_id, data):
              'phone': phone, 'name_seller': nameseller,
              'post_id': post_id}
         print(imgs)
-        requests.post("http://127.0.0.1:8000/api/v1/", data=v, files=imgs)
+        requests.post("http://127.0.0.1:8000/api/v1/aam/", data=v, files=imgs)
 
 
 def get_json(params ,cat_id):

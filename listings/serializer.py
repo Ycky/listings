@@ -1,7 +1,22 @@
-# from rest_framework import serializers
-#
-# from listings.models import *
-#
+from rest_framework import serializers
+from listings.models import *
+
+class AAMALLSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AAMAll
+        fields = ['user', 'title', 'description', 'price', 'city', 'category', 'phone', 'created']
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['photo','image_url','adl']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['category']
+
+
 # class AAMALLSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = AAMAll
