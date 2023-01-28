@@ -4,7 +4,7 @@ from listings.models import *
 class AAMALLSerializer(serializers.ModelSerializer):
     class Meta:
         model = AAMAll
-        fields = ['title', 'description', 'price', 'city', 'category', 'thumbnail_url', 'phone', 'author']
+        fields = ['title', 'description', 'price', 'city', 'category', 'author', 'photo', 'phone']
 
 
 class ImageSerializer(serializers.ModelSerializer):
