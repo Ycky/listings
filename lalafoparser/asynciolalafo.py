@@ -1,11 +1,8 @@
 import time
-
 import httpx
-import requests
 import json
 import asyncio
 import aiohttp
-from requests import Session
 
 
 cats = {2040: 3, 5830: 4, 2043: 5}
@@ -25,14 +22,13 @@ async def get_json(cat_id, client):
     return response.json()
 
 
-async def parse_categories(cat_id):
-    async with httpx.AsyncClient() as client:
-        tasks = []
-        # for cat_id, value in cats.items():
-        tasks.append(asyncio.ensure_future(get_json(cat_id, client)))
-        async_json = await asyncio.gather(*tasks)
-        # save_json(async_json)
-    return async_json
+# async def parse_categories(cat_id):
+#     async with httpx.AsyncClient() as client:
+#         tasks = []
+#         tasks.append(asyncio.ensure_future(get_json(cat_id, client)))
+#         async_json = await asyncio.gather(*tasks)
+#         # post = await post_json(data=tasks, client=client)
+#     return async_json
 
 
 def save_json(data):
@@ -42,12 +38,8 @@ def save_json(data):
 
 
 def filter_json(json_data, category_id):
-    # if json_data in category_id.keys():
-    #     return category_id[json_data]
     domen_photo = 'https://img5.lalafo.com/i/posters/api'
     tasks = []
-    # print(json_data)
-    # print('---------------------' * 100)
     for d in json_data[0]['items']:
             title = d['title']
             description = d['description']
@@ -76,39 +68,43 @@ def filter_json(json_data, category_id):
     return tasks
 
 
-def post_json(data, client):
+async def post_json(client, data):
+    print('d' * 70, data)
     for i in data:
-        title = i['title']
-        description = i['description']
-        price = i['price']
-        city = i['city']
-        cat_id = i['cat_id']
-        image = i['image']
-        phone = i['phone']
-        imgs = {}
-        r = client.get(image)
-        imgs['images'] = ("file.jpg", r.content, 'image/jpeg')
-        try:
-            nameseller = i['name_seller']
-        except:
-            nameseller = ''
+            print('i' * 70, i)
+            title = i['title']
+            description = i['description']
+            price = i['price']
+            city = i['city']
+            cat_id = i['cat_id']
+            image = i['image']
+            phone = i['phone']
+            imgs = {}
+            r = client.get(image)
+            imgs['images'] = ("file.jpg", r.content, 'image/jpeg')
+            try:
+                nameseller = i['name_seller']
+            except:
+                nameseller = ''
 
-        data = {
-            'title': f'{title}', 'description': f'{description}', 'price': f'{price}', 'city': f'{city}', 'category': f'{cats.get(cat_id)}',
-            'phone': f'{phone}', 'author': f'{nameseller}'
-        }
-        r = client.post("http://127.0.0.1:8000/api/v1/aam/", data=data, files=imgs)
-        print(r.text)
+            data = {
+                'title': f'{title}', 'description': f'{description}', 'price': f'{price}', 'city': f'{city}', 'category': f'{cats.get(cat_id)}',
+                'phone': f'{phone}', 'author': f'{nameseller}'
+            }
+            r = await client.post("http://127.0.0.1:8000/api/v1/aam/", data=data, files=imgs)
+            return r.json()
 
 
-def main():
-    tasks = []
-    for cat_id in cats:
-        json_data = asyncio.run(parse_categories(cat_id))
-        tasks.extend(filter_json(json_data, category_id=cat_id))
-        post_json(data=tasks, client=json_data)
-        save_json(data=tasks)
+async def main():
+    async with httpx.AsyncClient() as client:
+        tasks = []
+        for cat_id in cats:
+            pass
+            # tasks.append(asyncio.ensure_future(post_json(client, data=)))
 
+        client_post = await asyncio.gather(*tasks)
+        for r in client_post:
+            print(r)
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())

@@ -2,47 +2,33 @@ from rest_framework import serializers
 from listings.models import *
 
 class AAMALLSerializer(serializers.ModelSerializer):
+    photos = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='photos'
+    )
+
     class Meta:
         model = AAMAll
-        fields = ['title', 'description', 'price', 'city', 'category', 'author', 'photo', 'phone']
+        fields = ['title', 'description', 'price', 'city', 'category', 'author', 'phone', 'photos']
+
+    def create(self, validated_data):
+        print('v' * 50, validated_data)
+        photos_data = validated_data.pop('photos')
+        ads = AAMAll.objects.create(**validated_data)
+        for photo_data in photos_data:
+            Image.objects.create(ads=ads, **photo_data)
+        return ads
 
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['image_url']
+        fields = ['']
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['category']
 
-
-# class AAMALLSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = AAMAll
-#
-#
-# class AAMSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = AAMAll
-#         fields = ('user', 'title', 'description', 'price', 'city', 'category', 'phone', 'created')
-#
-#
-#     def create(self, validated_data):
-#         category = validated_data.pop('category')
-#         aam = AAMAll.objects.create(category=category, **validated_data)
-#         return aam
-#
-# class ImageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Image
-#         fields = ('adl', 'photo', 'image_url')
-#
-#
-# class CategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Category
-#         fields = ('category')
-#
-#

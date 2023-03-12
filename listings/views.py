@@ -16,10 +16,10 @@ class AAMALLView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         print(request.data)
         if serializer.is_valid(raise_exception=True):
-            image = request.FILES.get('images')
+            # image = request.FILES.get('images')
             object = serializer.save()
-            object.photo = image
-            object.save()
+            # object.photo = image
+            # object.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ImageView(generics.GenericAPIView):
@@ -31,7 +31,7 @@ class ImageView(generics.GenericAPIView):
         if serializer.is_valid():
             serializer.save()
             print(serializer.errors)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CategoryView(generics.ListCreateAPIView):
