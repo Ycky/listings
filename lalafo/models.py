@@ -14,7 +14,7 @@ class AAMAll(models.Model):
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     city = models.CharField(max_length=200)
-    cat_id = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     phone = models.CharField(max_length=25)
     author = models.CharField(max_length=200)
 

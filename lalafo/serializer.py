@@ -1,31 +1,31 @@
 from rest_framework import serializers
-from listings.models import *
+from lalafo.models import *
+
+
+class ImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Image
+        fields = '__all__'
 
 class AAMALLSerializer(serializers.ModelSerializer):
-    photos = serializers.HyperlinkedRelatedField(
+    photo = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
-        view_name='photos'
+        view_name='photo'
     )
 
     class Meta:
         model = AAMAll
-        fields = ['title', 'description', 'price', 'city', 'category', 'author', 'phone', 'photos']
+        fields = '__all__'
 
     def create(self, validated_data):
-        print('v' * 50, validated_data)
-        photos_data = validated_data.pop('photos')
+        print('sss' * 50, validated_data)
+        photos_data = validated_data.pop('photo')
         ads = AAMAll.objects.create(**validated_data)
         for photo_data in photos_data:
             Image.objects.create(ads=ads, **photo_data)
         return ads
-
-
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = ['photo']
-
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

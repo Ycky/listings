@@ -1,4 +1,3 @@
-
 import time
 
 import httpx
@@ -9,7 +8,7 @@ import aiohttp
 from requests import Session
 
 
-cats = {2040: 3, 5830: 4, 2043: 5}
+cats = {2040: 4, 5830: 2, 2043: 3}
 start_time = time.time()
 
 
@@ -73,7 +72,7 @@ def filter_json(json_data, category_id):
 
 def post_json(data):
     for i in data:
-        print('i' * 100, i)
+        # print('i' * 100, i)
         title = i['title']
         description = i['description']
         price = i['price']
@@ -81,16 +80,18 @@ def post_json(data):
         cat_id = i['cat_id']
         images = i['images']
         phone = i['phone']
+
         try:
             nameseller = i['name_seller']
         except:
             nameseller = ''
 
         data = {
-            'title': title, 'description': description, 'price': price, 'city': city, 'category': cats.get(cat_id),
+            'title': title, 'description': description, 'price': price, 'city': city, 'cat_id': cats.get(cat_id),
             'images': images, 'phone': phone, 'author': nameseller,
         }
-        r = requests.post("http://127.0.0.1:8000/api/v1/aam/", json=data)
+
+        r = requests.post(url="http://127.0.0.1:8000/api/v1/mvi/", json=data)
         print(r.text)
 
 
@@ -99,9 +100,10 @@ def main():
     for cat_id in cats:
         json_data = asyncio.run(parse_categories(cat_id))
         tasks.extend(filter_json(json_data, category_id=cat_id))
-        # post_json(data=tasks)
+        post_json(data=tasks)
         save_json(data=tasks)
 
 
 if __name__ == '__main__':
     main()
+

@@ -6,3 +6,4 @@ urlpatterns = [
     path('image/', views.ImageView.as_view()),
     path('aam/', views.AAMALLView.as_view()),
 ]
+
