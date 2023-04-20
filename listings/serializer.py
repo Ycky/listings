@@ -10,7 +10,7 @@ class AAMALLSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AAMAll
-        fields = ['title', 'description', 'price', 'city', 'category', 'author', 'phone', 'photos']
+        fields = '__all__'
 
     def create(self, validated_data):
         print('v' * 50, validated_data)
